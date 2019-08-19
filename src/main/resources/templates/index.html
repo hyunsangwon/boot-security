@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<script type="text/javascript">
+	$(function() {
+		$("#ajaxCall").click(function(){
+			ajaxCall();
+		});
+	});
+	
+	function ajaxCall(){
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		var name = $("#userName").val();
+		
+		var jsonData = {
+			"name" : name
+		}
+		
+		$.ajax({
+			type: 'POST',
+			contentType: "application/json",
+			url:'/csrf/ajax',
+			data: JSON.stringify(jsonData), // String -> json 형태로 변환
+			beforeSend : function(xhr)
+            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+				xhr.setRequestHeader(header, token);
+            },
+			dataType: 'json', // success 시 받아올 데이터 형
+			async: true, //동기, 비동기 여부
+			cache :false, // 캐시 여부
+			success: function(data){
+				console.log(data.name);
+			},
+			error:function(xhr,status,error){
+				console.log('error:'+error);
+			}
+		});
+	}
+	
+</script>
+<body>
+    <div class="container">
+    
+    	<!-- 로그아웃  -->
+        <form th:action="@{/logout}" method="post"> 
+        <button class="btn btn-md btn-danger btn-block" name="registration"type="Submit">Logout</button> 
+        </form>
+        
+        <!-- 로그인한 유저 이름및 권한 확인 -->
+        <div class="panel-group" style="margin-top:40px">
+            <div class="panel panel-primary">
+                <div class="panel-heading"> <span th:utext="${name}"></span> </div>
+                <p class="admin-message-text text-center" th:utext="${auth}"></p>
+            </div>
+        </div>
+        
+        <!--CSRF FROM 테스트  
+        <form:form> 태그를 사용하거나, Thymeleaf 2.1, @EnableWebSecurity를 사용하는 경우
+        CsrfRequestDataValueProcessor가 적용되어 from 에 CSRF 토큰이 자동적으로 들어간다.
+		단, AJAX로 값을 보낼땐 써야한다.     
+        -->          	
+		<form th:action="@{/csrf/form}" th:method="post">
+			<div class="form-group row">
+				<label class="control-label col-sm-2" for="name">이름 :</label>
+				<div class="col-md-4">
+					<input autocomplete="off" type="text" class="form-control" name="name">
+				</div>
+			</div>
+			<button class="btn btn-md btn-danger btn-block" type="Submit">Call</button> 
+		</form>
+		
+		<!--AJAX Submit-->
+		<div class="panel-heading"></div>
+		<input autocomplete="off" type="text" class="form-control" id="userName" name="name">
+		<button class="btn btn-md btn-danger btn-block" id="ajaxCall" type="button">AJAX Call</button> 
+    </div>
+</body>
+</html>

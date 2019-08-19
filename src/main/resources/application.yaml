@@ -1,0 +1,28 @@
+application:
+   version: v1.0.0
+   title: boot-security
+   
+spring:
+   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+ ## initialization-mode 옵션: never, always (어플리케이션 실행시 sql파일 실행할지 안할지 여부 선택)
+    initialization-mode: never
+ ## sql 파일 경로
+    schema: classpath:init.sql
+    url: jdbc:mysql://localhost:3306/boot-security?useUnicode=true&charaterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: tkddnjs0823
+        
+   devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+      
+   thymeleaf:
+      cache: false
+      mode: HTML
+      
+## 마이바티스 sql.xml 경로      
+mybatis:
+  mapper-locations: classpath:/sqlmap/sqlmapper_*.xml

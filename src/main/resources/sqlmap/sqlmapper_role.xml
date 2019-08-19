@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.HomeMapper">
+
+	<select id="findByUserId" resultType="com.example.demo.vo.UserVO">
+		SELECT
+			u.password AS password,
+			u.name AS name,
+			r.role_name AS roleName
+		FROM user AS u
+		  INNER JOIN user_role AS ur
+		  ON u.user_no = ur.user_no
+		  INNER JOIN role AS r 
+		  ON r.role_no = ur.role_no
+		WHERE
+			u.id = #{id}
+    </select>
+	
+	<insert id="userSave" parameterType="com.example.demo.vo.UserVO">
+	    INSERT INTO user
+        (
+            id,
+            password,
+            name
+        )
+        VALUES
+        (
+            #{id},
+            #{password},
+            #{name}
+        )
+	</insert>
+
+	<insert id="userRoleSave">
+		INSERT INTO user_role
+        (
+            user_no,
+            role_no
+        )
+        VALUES
+        (
+            #{userNo},
+            #{roleNo}
+        )
+	</insert>
+	
+	<select id="findUserNo" resultType="Integer">
+		SELECT 
+			user_no
+		FROM user
+		WHERE id = #{id}
+	</select>
+	
+	<select id="findRoleNo" resultType="Integer">
+		SELECT 
+			role_no
+		FROM role
+		WHERE role_name = #{roleName}
+	</select>
+	
+</mapper>
