@@ -36,7 +36,7 @@ Config
 	"name":"현상원",
 	"roleName":"ADMIN"
 }  
-JSON 형태로 POST로 보내주면 된다.
+***JSON 형태로 POST로 보내주면 된다.***
 
 ### 그외 참고사항
 프로퍼티스 파일이 아닌 YAML 파일  
