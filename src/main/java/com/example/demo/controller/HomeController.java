@@ -47,4 +47,12 @@ public class HomeController {
 		return csrfVO;
 	}
 	
+	//contentType application/x-www-form-urlencoded 일떄는 @RequestBody 쓰지 않음
+	@PostMapping("/csrf/ajaxForm")
+	public @ResponseBody CsrfVO AJAXFormSubmit(CsrfVO csrfVO) {
+		
+		return csrfVO;
+	}
+	
+
 }

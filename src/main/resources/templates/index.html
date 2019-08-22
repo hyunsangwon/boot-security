@@ -10,8 +10,13 @@
 </head>
 <script type="text/javascript">
 	$(function() {
+		//form 없이 전송
 		$("#ajaxCall").click(function(){
 			ajaxCall();
+		});
+		//form 사용해서 전송
+		$("#formAjaxCall").click(function(){
+			ajaxFormCall();
 		});
 	});
 	
@@ -45,6 +50,36 @@
 		});
 	}
 	
+	//serialize 전송은 contentType이 다름
+	function ajaxFormCall(){
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		var formAjax = $("#ajaxForm").serialize();
+		
+		console.log(formAjax);
+		 $.ajax({
+			type: 'POST',
+			contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+			url:'/csrf/ajaxForm',
+			data: formAjax,
+			beforeSend : function(xhr)
+            { 
+				xhr.setRequestHeader(header, token);
+            },
+			dataType: 'json', 
+			async: true,
+			cache :false,
+			success: function(data){
+				console.log(data);
+			},
+			error:function(xhr,status,error){
+				console.log('error:'+error);
+			}
+		});
+		
+	}
+	
+	
 </script>
 <body>
     <div class="container">
@@ -77,10 +112,20 @@
 			<button class="btn btn-md btn-danger btn-block" type="Submit">Call</button> 
 		</form>
 		
-		<!--AJAX Submit-->
+		<!-- AJAX Submit -->
 		<div class="panel-heading"></div>
 		<input autocomplete="off" type="text" class="form-control" id="userName" name="name">
 		<button class="btn btn-md btn-danger btn-block" id="ajaxCall" type="button">AJAX Call</button> 
+		
+		<!-- AJAX Submit 2 -->
+		<div class="panel-heading"></div>
+		<form id="ajaxForm">
+			<input autocomplete="off" type="text" class="form-control" id="name" name="name">
+			<input autocomplete="off" type="text" class="form-control" id="age" name="age">
+			<input autocomplete="off" type="text" class="form-control" id="email" name="email">
+			<button class="btn btn-md btn-danger btn-block" id="formAjaxCall" type="button">AJAX Form Call</button> 		
+		</form>
+		
     </div>
 </body>
 </html>
